@@ -1,0 +1,38 @@
+{% load static %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>SDP 2014: Team Rest</title>
+        <meta name="description" content="An interactive getting started guide for Brackets.">
+        
+        <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "main.css" %}">
+    </head>
+    <body>
+		  <div id="menu" class="container">
+			<ul>
+				<li id="begP"><a href="/">Home</a></li>
+				<li id="mid"><a href="/data/tram_info/">Tram Information</a></li>
+				<li id="mid"><a href="/articles/commands/">Command the Tram</a></li>	
+				<li id="endT"><a href="/data/graph/3/">Collected Data</a></li>
+			</ul>
+		</div>        
+        <div style="height: 50px"></div>
+        <p>Successfully logged out! Returning to the home page in 5 seconds!</p>
+		<p>{{ blank }}</p>
+		<script>
+		
+		window.setTimeout(function(){
+        window.location.href = "/";
+		}, 5000);
+	
+		</script>	
+	   
+	
+    </body>
+</html>

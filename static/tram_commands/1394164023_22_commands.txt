@@ -1,0 +1,6 @@
+move 100
+move 200
+wait 5
+move 300
+wait 5
+measure 1 1 0 0 0

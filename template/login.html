@@ -1,0 +1,45 @@
+{% load static %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>SDP 2014: Team Rest</title>
+        
+        
+        <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "main.css" %}">
+    </head>
+	<body>
+
+			{% block content %}
+
+			{% if form.errors %}
+			<p>Your username and password didn't match. Please try again.</p>
+			{% endif %}
+
+			<form method="post" action="{% url "django.contrib.auth.views.login" %}">
+			{% csrf_token %}
+			<table>
+			<tr>
+				<td>{{ form.username.label_tag }}</td>
+				<td>{{ form.username }}</td>
+			</tr>
+			<tr>
+				<td>{{ form.password.label_tag }}</td>
+				<td>{{ form.password }}</td>
+			</tr>
+			</table>
+
+			<input type="submit" value="login" />
+			<input type="hidden" name="next" value="{{ next }}" />
+			</form>
+
+			{% endblock %}
+			
+	</body>
+
+</html>	

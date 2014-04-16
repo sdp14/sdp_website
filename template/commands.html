@@ -1,0 +1,213 @@
+{% load static %}
+{% load staticfiles %}
+
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>SDP 2014: Team Rest</title>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="{% static "js/bootstrap.js" %}" ></script>
+		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "main.css" %}">
+        
+    </head>
+    <body>
+		 <div id="menu" class="container">
+			<ul>
+				<li id="begP"><a href="/">Home</a></li>
+				<li id="mid"><a href="/data/tram_info/">Tram Information</a></li>
+				<li id="mid"><a href="/articles/commands/">Command the Tram</a></li>	
+				<li id="endT"><a href="/data/graph/3/">Collected Data</a></li>
+			</ul>
+		</div>	
+		         
+        <p> </p>
+		
+		<h3 id="login_name" >Welcome, {{ user_name }}.</h3>
+			
+		
+        <h1>SDP14: Team REST</h1>
+
+	
+		<style type="text/css">
+		   .hidden {
+				display: none;
+		   {
+		   .visible {
+				display: block;
+		   }
+		</style>
+		
+		<p>Click the command button that represents the command you want below or click "View Advanced Controls" to input more precise commands.</p>
+		<p>Last Command was: {{ last_command}}</p>
+		<p>{{ is_valid }}</p>
+			
+		
+		
+		
+		<button onclick="uploadCommand('enable_autonomous')" class="btn btn-primary" type="button">Enable Autonomous Control</button>
+		<button onclick="uploadCommand('disable_autonomous')" class="btn btn-primary" type="button">Disable Autonomous Control</button>
+		
+		
+		<button id="Command_Btn" type="button" class="btn btn-info">View Advanced Controls</button>
+		<p></p>
+		
+				
+		<div class="row" id="command_div">
+			  <div class="col-lg-6">
+				<div class="input-group">
+				  <div class="input-group-btn">
+					<button id="button_to_change" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select Command from the dropdown menu.    <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+					  <li onclick="commandID('Move')"><a href="#">Move</a></li>
+					  
+					  <li onclick="commandID('Accelerometer Sensitivity')"><a href="#">Accelerometer Sensitivity</a></li>
+					  <li onclick="commandID('Accelerometer Tolerence')"><a href="#">Accelerometer Tolerence</a></li>
+					  
+					  <li onclick="commandID('Measurement Tolerence')"><a href="#">Measurement Tolerence</a></li>
+					  
+					  
+					  <li onclick="uploadCommand('measure 0 0 0 1 0')"><a href="#">Livestream ON</a></li>
+					  <li onclick="uploadCommand('measure 0 0 0 0 1')"><a href="#">Livestream OFF</a></li>
+					  <li onclick="uploadCommand('measure 1 0 0 0 0')"><a href="#">Measure</a></li>
+					  <li onclick="uploadCommand('measure 0 1 0 0 0')"><a href="#">Take Pictures</a></li>
+					  <li class="divider"></li>
+					  <li><a href="/articles/tram_file_upload/">Upload file with new autonomous commands.</a></li>					  
+					</ul>
+				  </div><!-- /btn-group -->
+				  <input id="command_text" type="text" style="white-space:nowrap;" class="form-control hidden" placeholder="Enter an integer value for the distance in centimeters.">
+				  
+				<button id="submit_btn" type="button" class="btn btn-default hidden" >Submit Command</button>
+				
+				</div><!-- /input-group -->
+			  
+			  </div><!-- /.col-lg-6 -->
+		<p> </p>
+
+		<div class="hidden" id="command_form">		
+			<p>Enter commands below.</p>		
+				<!-- Button trigger modal -->
+				<p class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal">
+				  Click here for command instructions!
+				</p>
+				<p></p>
+
+			{% block content %}
+				<form action="/articles/commands/" id ="send_command_form" method="post">{% csrf_token %}
+					
+					{{form.as_ul}}
+					
+				<input type="submit" class="btn btn-primary" type="button" name="submit" value="Send Command">
+				</form>
+			{% endblock %}		
+			
+		</div>
+		<div> </div>
+		<p></p>
+		<!--<button><a href="/articles/tram_file_upload/" >Upload file with new autonomous commands.</a></button>-->		
+		
+		
+		
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Commands</h4>
+			  </div>
+			  <div class="modal-body">
+				...
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+	
+		<script type="text/javascript">
+
+		$('label[for="id_title"]').text('Enter New Command: ');
+		
+		
+		
+		var resultsDiv = document.getElementById('command_form');
+		var resultsBtn = document.getElementById('Command_Btn');
+		var is_visible = 0;	
+		
+		resultsBtn.onclick = function() {
+			if(is_visible == 0){
+				resultsDiv.setAttribute('class', 'visible');
+				is_visible = 1;
+			}else{
+			
+				resultsDiv.setAttribute('class', 'hidden');
+				is_visible = 0;
+			}
+			
+		};
+
+		function uploadCommand(arg)
+		{
+			document.getElementById("id_title").value = arg;
+			HTMLFormElement.prototype.submit.call($('#send_command_form')[0]);
+		}
+		
+		
+		function commandID(arg)
+		{
+			
+			if(arg == "Move" || arg=='Measurement Tolerence' || arg == "Accelerometer Sensitivity" || arg == "Accelerometer Tolerence"){
+			
+				if(arg == "Move"){
+					document.getElementById('command_text').setAttribute('class', 'form-control visible');
+					document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+				}	
+				if(arg == "Accelerometer Sensitivity"){
+					document.getElementById('command_text').setAttribute('class', 'form-control visible');
+					document.getElementById('command_text').setAttribute('placeholder', 'Enter the sensitivity for the accelerometer');
+					document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+					$(".col-lg-6").css('width',100+"%");
+				}	
+				if(arg == "Accelerometer Tolerence"){
+					document.getElementById('command_text').setAttribute('class', 'form-control visible');
+					document.getElementById('command_text').setAttribute('placeholder', 'Enter the tolerance for the accelerometer');
+					document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+					$(".col-lg-6").css('width',100+"%");
+					
+				
+				}	
+				if(arg == 'Measurement Tolerence'){
+				    document.getElementById('command_text').setAttribute('class', 'form-control visible');
+					document.getElementById('command_text').setAttribute('placeholder', 'Enter the tolerance for the measurement');
+					document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+					$(".col-lg-6").css('width',100+"%");
+				}
+		
+		
+			}else{
+			
+				document.getElementById('command_text').setAttribute('class', 'form-control hidden');
+				document.getElementById('submit_btn').setAttribute('class', 'btn btn-default hidden');
+		
+			}
+		
+		
+			document.getElementById("button_to_change").innerHTML = arg+" <span class='caret'></span>";
+		
+		
+		}
+
+		
+
+		</script>	
+			
+			
+    </body>
+</html>

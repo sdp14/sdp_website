@@ -1,0 +1,15 @@
+<html>
+	<body>
+	
+	{% block content %}
+				<form action="/data/json_upload/" method="post" name="JSONUpload" enctype="multipart/form-data">{% csrf_token %}
+					<ul>
+					{{form.as_ul}}
+					</ul>
+			    <input type="submit" name="submit" value="Upload JSON">
+				</form>
+	{% endblock %}
+	
+	</body>
+	
+</html>

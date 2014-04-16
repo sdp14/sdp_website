@@ -1,0 +1,43 @@
+{% load static %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>SDP 2014: Team Rest</title>
+        <meta name="description" content="An interactive getting started guide for Brackets.">
+        
+        <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "main.css" %}">
+    </head>
+    <body>
+		  <div id="menu" class="container">
+			<ul>
+				<li id="begP"><a href="/">Home</a></li>
+				<li id="mid"><a href="/data/tram_info/">Tram Information</a></li>
+				<li id="mid"><a href="/articles/commands/">Command the Tram</a></li>	
+				<li id="endT"><a href="/data/graph/3/">Collected Data</a></li>
+			</ul>
+		</div>        
+        
+        <p></p>
+        <h1 id="team_header" style="text-align:left;float:left;"> {{ name }}</h1>
+		<img id ="tram_img" src="{% static "images/tram.png" %}" >
+		
+		<h2 id="intro">Our Project</h2>
+		<p id="abstract" >Introducing the Remote Environmental Sensing Tram (REST), a remote sensing tram that will be 
+			used to monitor forest health in the Harvard Forest. This system will be able to collect a 
+			multitude of sensor data, from above the Harvard Forest canopy and transmit that data to a website. 
+			The website will tabulate and graphically display the data as well as allow the user to issue 
+			commands to the remote tram. With this system we hope to provide environmental scientists and 
+			others that are interested in monitoring the health of forests with useful data.
+		</p>
+			
+		
+		
+	
+    </body>
+</html>

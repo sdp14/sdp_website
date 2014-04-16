@@ -1,0 +1,386 @@
+{% load static %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>SDP 2014: Team Rest</title>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="{% static "js/bootstrap.js" %}" ></script>
+		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "main.css" %}">
+    </head>
+    <body>
+    
+    	<style type="text/css">
+		   .hidden {
+				display: none;
+		   {
+		   .visible {
+				display: block;
+		   }
+		</style>
+		
+				
+    
+    
+	    <div id="menu" class="container">
+			<ul>
+				<li id="begP"><a href="/">Home</a></li>
+				<li id="mid"><a href="/data/tram_info/">Tram Information</a></li>
+				<!--<li id="mid"><a href="/articles/commands/">Command the Tram</a></li>-->	
+				<li id="endT"><a href="/data/graph/3/">Collected Data</a></li>
+			</ul>
+		</div>	        
+        
+        <p></p>
+        <h1> {{ name }}</h1>
+		<h3 id="login_name" >Welcome, {{ user_name }}.</h3>
+		<button style="float: right;" type="button" class="btn btn-info btn-xs"><a href="/accounts/logout/">Logout</a></button>
+		<div style="height: 30px"></div>
+		
+		<p id ="accel_info" class="bg-success" style="height: 50px; font-size:20px; text-align:center;">Accelerometer is experiencing no turbulance.</p>
+		<p></p>
+		<div id="flashingtext" style="; font-size: 24px; color: blue" class="hidden" align="center"><strong>Danger!! Danger!! Danger!!</strong></div>	
+		<h2 align="center">Base Station Livestream</h2>
+		
+		<div align="center">
+		<object type="application/x-shockwave-flash" data="http://www.justin.tv/swflibs/JustinPlayer.swf?channel=sdp1412" id="live_embed_player_flash" height="480" width="640" bgcolor="#000000"><param name="allowFullScreen" value="true"/><param name="allowScriptAccess" value="always" /><param name="allowNetworking" value="all" /><param name="movie" value="http://www.justin.tv/swflibs/JustinPlayer.swf" /><param name="flashvars" value="hostname=www.justin.tv&channel=sdp1412&auto_play=true&start_volume=25" /></object><a href="http://www.justin.tv/sdp1412#r=-rid-&amp;s=em" class="trk" style="padding:2px 0px 4px; display:block; width:345px; font-weight:normal; font-size:10px; text-decoration:underline; align:center"></a>
+		</div>	
+		
+		<div style="height: 30px"></div>
+		
+		<div>
+			<h2>Tram Information</h2>
+		</div>
+		
+		<p id="pos_int">The tram is currently {{ position }} from the base station.</p>
+		
+		
+		<div id="progress">
+			<span id="percent"></span>
+			<div id="bar" style="width: 2.5%; left: {{ position_percentage }}%;"></div>
+			<div id="bar2" style="width: 10%;"></div>
+		</div>
+		
+		<div id="locations">
+			<span id="location_percent" style="left: 10%;">5m</span>
+			<span id="location_percent" style="left: 20%;">10m</span>
+			<span id="location_percent" style="left: 30%;">15m</span>
+			<span id="location_percent" style="left: 40%;">20m</span>
+			<span id="location_percent" style="left: 50%;">25m</span>
+			<span id="location_percent" style="left: 60%;">30m</span>
+			<span id="location_percent" style="left: 70%;">35m</span>
+			<span id="location_percent" style="left: 80%;">40m</span>
+			<span id="location_percent" style="left: 90%;">45m</span>
+			<span id="location_percent" style="left: 98%;">50m</span>
+			
+		</div>
+		<!--
+		<div style="height: 30px"></div>
+		
+		<p>The tram has {{ battery_info }} of remaining battery life.</p>
+		
+		-->
+		
+		<div style="height: 50px"></div>
+		
+		<p>Send a command to the tram by selecting a command from the dropdown menu below or send a custom command by clicking the "View Advanced Command Controls"</p>
+		<p id="last_command">Last Command was: {{ last_command}}</p>
+		<p id="last_command_validity">{{ is_valid }}</p>
+		
+		<!--<div style="height: 50px"></div>-->
+		<div class="row" id="command_div">
+		  <div class="col-lg-6">
+			<div class="input-group">
+			  <div class="input-group-btn">
+				<button id="button_to_change" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select Command from the dropdown menu.    <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+				
+				  <li onclick="commandID('Move')"><a href="#" onclick="return false;">Move</a></li>
+				  
+				  <li onclick="commandID('Accelerometer Sensitivity')"><a href="# " onclick="return false;">Accelerometer Sensitivity</a></li>
+				  <li onclick="commandID('Accelerometer Tolerence')"><a href="#" onclick="return false;">Accelerometer Tolerence</a></li>
+				  
+				  <li onclick="commandID('Measurement Tolerence')"><a href="#" onclick="return false;">Measurement Tolerence</a></li>
+				  
+				  
+				  <li onclick="uploadCommand('measure 0 0 0 1 0')"><a href="#">Livestream ON</a></li>
+				  <li onclick="uploadCommand('measure 0 0 0 0 1')"><a href="#">Livestream OFF</a></li>
+				  <li onclick="uploadCommand('measure 1 0 0 0 0')"><a href="#">Measure</a></li>
+				  <li onclick="uploadCommand('measure 0 1 0 0 0')"><a href="#">Take Pictures</a></li>
+				  <li class="divider"></li>
+				  <li><a href="/articles/tram_file_upload/">Upload file with new autonomous commands.</a></li>					  
+				</ul>
+			  </div><!-- /btn-group -->
+			  <input id="command_text" type="text" style="white-space:nowrap;" class="form-control hidden" placeholder="Enter an integer value for the distance in centimeters.">
+			  
+			<button id="submit_btn" type="button" class="btn btn-default hidden" onclick="getInfo()">Submit Command</button>
+			<div style="height: 30px"></div>
+			</div><!-- /input-group -->
+		  
+		</div><!-- /.col-lg-6 -->
+		
+		
+		
+		<div style="height: 50px"></div>
+		<div>
+			<p style="text-align=center">Last command the tram processed: </p>
+			<table style="margin: 0 auto;" border="1">
+			
+				<tr>
+					<th>Command</th>
+					<th>Status</th>
+					<th>Time Command executed</th>
+				<tr>
+			
+				<tr>
+					<td id="cur_move">{{ current_move }}</td>
+					<td id="cur_move_status"><span class="label label-success">{{ current_move_status }}</span></td>	
+					<td id="timestamp">{{ timestamp }}</td>	
+				</tr>
+			
+			
+			
+			
+			
+			</table>
+		
+		</div>
+		<div style="height: 50px"></div>
+		<!-- Button trigger modal -->
+		<p class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" style="height: 30px; font-size:15px; text-align:center;">
+		  View Advanced Command Controls </p>
+		<!-- Modal -->
+		
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Commands</h4>
+			  </div>
+			  <div class="modal-body">
+				
+				<p id="last_command">Last Command was: {{ last_command}}</p>
+				<p id="last_command_validity">{{ is_valid }}</p>
+				
+				<button onclick="uploadCommand('enable_autonomous')" class="btn btn-primary" type="button">Enable Autonomous Control</button>
+				<button onclick="uploadCommand('disable_autonomous')" class="btn btn-primary" type="button">Disable Autonomous Control</button>
+				
+				<p></p>
+
+				{% block content %}
+					<form action="/data/tram_info/" id ="send_command_form" method="post">{% csrf_token %}
+						
+						{{form.as_ul}}
+						
+					<input type="submit" class="btn btn-primary" type="button" name="submit" value="Send Command">
+					</form>
+				{% endblock %}		
+
+				
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<!--
+		<p>{{ accelerometer }}</p>
+		<p>{{ shutdown_info }}</p>
+		-->
+		<script>
+		
+			/*accelerometer information, 0 means that the accelerometer is ok, 1 is there is some turbulence and 2 there is a lot of turbulence and
+			  the tram is shutdown	
+				
+			*/
+			var accel_mode = parseInt({{ accelerometer }} );
+			var cur_id = parseInt( {{ id }} );
+			//alert(cur_id);
+		//	var shutdown_information = {{ shutdown_info }};
+		
+			
+			function get_id(){
+				var xmlHttp = null;
+				//alert("gjk");
+				xmlHttp = new XMLHttpRequest();
+				xmlHttp.open( "GET", "http://192.168.1.10:8000/data/get_latest_traminfo_id/", false );
+				xmlHttp.send( null );
+				if(parseInt(xmlHttp.responseText) > cur_id){
+				
+					get_new_tram_data();
+				
+				
+				}
+				
+				
+				//alert( xmlHttp.responseText);
+			
+			}
+			
+			
+						
+			function get_new_tram_data(){
+			
+				$.getJSON( "http://192.168.1.10:8000/data/get_latest_tram_data/", function( data ) {
+					 // alert(data.name);
+				
+					document.getElementById("pos_int").innerHTML = "The tram is currently " + String(data.position) + " from the base station.";
+					document.getElementById("bar").setAttribute('style', 'width: 2.5%; left:' + String(data.position_percentage) + '%;'); 
+					  
+					document.getElementById("last_command").innerHTML = "Last Command was: " +  String(data.last_command) + ".";
+					document.getElementById("last_command_validity").innerHTML = data.is_valid;
+					  
+					document.getElementById("cur_move").innerHTML = data.current_move;
+					document.getElementById("timestamp").innerHTML = data.timestamp;
+					  
+					if(String(data.current_move_status).toLowerCase().indexOf("success") != -1){
+					  
+						document.getElementById("cur_move_status").innerHTML = '<span class="label label-success">success</span>'; 
+										  
+					  
+					}else{ 
+							
+						document.getElementById("cur_move_status").innerHTML = '<span class="label label-danger">failure</span>'; 
+						
+						} 		
+						 
+					accel_mode = parseInt(data.accelerometer);
+					acc();
+			
+				 
+					});
+
+			}
+			
+			//get_json();
+			
+			function acc(){
+				if(accel_mode == 0){
+					document.getElementById("accel_info").className = "bg-success";
+					document.getElementById("accel_info").innerHTML = "Accelerometer is experiencing no turbulance."; 
+					document.getElementById('flashingtext').setAttribute('class', 'hidden');
+					
+				}
+				
+				else if(accel_mode == 1){		
+					document.getElementById("accel_info").className = "bg-warning";
+					document.getElementById("accel_info").innerHTML = "Accelerometer is experiencing some turbulance."; 
+					document.getElementById('flashingtext').setAttribute('class', 'hidden');
+					
+				}
+		
+				else if(accel_mode == 2){
+					
+					document.getElementById("accel_info").className = "bg-danger";	
+					document.getElementById("accel_info").innerHTML = "Accelerometer is shutting down."; 
+					document.getElementById('flashingtext').setAttribute('class', 'visible');
+						
+				}
+			
+			}
+		
+			acc();
+		
+			function flashtext(ele,col) {
+		        var tmpColCheck = document.getElementById( ele ).style.color;
+
+		          if (tmpColCheck === 'silver') {
+		            document.getElementById( ele ).style.color = col;
+		          } else {
+		            document.getElementById( ele ).style.color = 'silver';
+		          }
+            } 
+            
+            setInterval(function() {
+                flashtext('flashingtext','red');
+				get_id();
+            }, 500 ); //set an interval timer up to repeat the function
+			
+			
+			$('label[for="id_title"]').text('Enter New Command: ');
+		
+		
+		
+			var resultsDiv = document.getElementById('command_form');
+			var resultsBtn = document.getElementById('Command_Btn');
+			var is_visible = 0;	
+	
+
+			function uploadCommand(arg)
+			{
+				document.getElementById("id_title").value = arg;
+				HTMLFormElement.prototype.submit.call($('#send_command_form')[0]);
+			}
+			
+			var cur_cmd = "";
+			
+			function commandID(arg)
+			{
+				
+				if(arg == "Move" || arg=='Measurement Tolerence' || arg == "Accelerometer Sensitivity" || arg == "Accelerometer Tolerence"){
+				
+					if(arg == "Move"){
+						
+						cur_cmd = "move";
+						document.getElementById('command_text').setAttribute('class', 'form-control visible');
+						document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+						$(".col-lg-6").css('width',100+"%");
+					}	
+					if(arg == "Accelerometer Sensitivity"){
+						cur_cmd = "acc_sen";
+						document.getElementById('command_text').setAttribute('class', 'form-control visible');
+						document.getElementById('command_text').setAttribute('placeholder', 'Enter the sensitivity for the accelerometer');
+						document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+						$(".col-lg-6").css('width',100+"%");
+					}	
+					if(arg == "Accelerometer Tolerence"){
+						cur_cmd = "acc_tol";
+						document.getElementById('command_text').setAttribute('class', 'form-control visible');
+						document.getElementById('command_text').setAttribute('placeholder', 'Enter the tolerance for the accelerometer');
+						document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+						$(".col-lg-6").css('width',100+"%");
+						
+					
+					}	
+					if(arg == 'Measurement Tolerence'){
+						cur_cmd = "msr_tol";
+						document.getElementById('command_text').setAttribute('class', 'form-control visible');
+						document.getElementById('command_text').setAttribute('placeholder', 'Enter the tolerance for the measurement');
+						document.getElementById('submit_btn').setAttribute('class', 'btn btn-default visible');
+						$(".col-lg-6").css('width',100+"%");
+					}
+			
+			
+				}else{
+				
+					document.getElementById('command_text').setAttribute('class', 'form-control hidden');
+					document.getElementById('submit_btn').setAttribute('class', 'btn btn-default hidden');
+			
+				}
+			
+			
+				document.getElementById("button_to_change").innerHTML = arg+" <span class='caret'></span>";
+			
+			
+			}
+			
+			function getInfo(){
+			
+				var a = document.getElementById('command_text').value;
+				var arg = String(cur_cmd)+" "+ String(a); 
+				uploadCommand(arg);
+			
+			}
+			
+			
+		</script>
+	
+    </body>
+</html>

@@ -1,0 +1,19 @@
+<html>
+	<body>
+	
+	{% for article in articles %}
+	<div>
+	
+	<p>
+	
+		<a href="/articles/get/{{ article.id }}/"> {{ article.title}}</a>
+	
+	</p>
+	
+	</div>
+	{% endfor %}
+	
+	</body>
+	
+</html>
+

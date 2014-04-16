@@ -1,0 +1,3 @@
+move 10
+wait 10
+move 1
